@@ -166,7 +166,9 @@ function makePopup(properties) {
     ["Permit number", properties.PERMIT_NUM],
     ["Source dataset", properties.source_dataset],
     ["Application date", properties.APPLICATION_DATE],
-    ["Completed date", properties.COMPLETED_DATE]
+    ["Completed date", properties.COMPLETED_DATE],
+    ["Net units", properties.net_units]
+
   ];
 
   rows.forEach(([label, value]) => {
