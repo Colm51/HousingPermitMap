@@ -33,7 +33,9 @@ const elements = {
   dataDateRange: document.querySelector("#data-date-range"),
   rangeSelection: document.querySelector("#range-selection"),
   histogram: document.querySelector("#date-histogram"),
-  resetDates: document.querySelector("#reset-dates")
+  resetDates: document.querySelector("#reset-dates"),
+  unitCategoryFilters: [...document.querySelectorAll('input[name="unit-category"]')],
+  sourceDatasetFilters: [...document.querySelectorAll('input[name="source-dataset"]')]
 };
 
 const map = L.map("map", {
@@ -183,7 +185,7 @@ function makePopup(properties) {
   return wrapper;
 }
 
-// Recalculate the three cards from only the permits inside the chosen date range.
+// Recalculate the three cards from only the permits matching every active filter.
 function updateSummary(filteredPermits) {
   const totals = filteredPermits.reduce(
     (summary, permit) => {
@@ -221,18 +223,29 @@ function updateControlDisplay(startDay, endDay) {
   updateHistogram(startDate, endDate);
 }
 
-// Date filtering removes out-of-range Leaflet layers, so hidden markers cannot open popups.
-// The same filtered array is then used for the summary cards, keeping map and totals aligned.
-function applyDateFilter() {
+// Filtering removes non-matching Leaflet layers, so hidden markers cannot open popups.
+// All conditions are evaluated against the already-loaded permit records, and the same
+// visible array drives the summary cards so the map and totals remain aligned.
+function applyFilters() {
   const startDay = Number(elements.startRange.value);
   const endDay = Number(elements.endRange.value);
   const startTime = dayToDate(startDay).getTime();
   const endTime = dayToDate(endDay).getTime();
+  const selectedUnitCategories = new Set(
+    elements.unitCategoryFilters.filter((input) => input.checked).map((input) => input.value)
+  );
+  const selectedSourceDatasets = new Set(
+    elements.sourceDatasetFilters.filter((input) => input.checked).map((input) => input.value)
+  );
   const visiblePermits = [];
 
   markerLayer.clearLayers();
   permits.forEach((permit) => {
-    if (permit.applicationTime >= startTime && permit.applicationTime <= endTime) {
+    const matchesDate = permit.applicationTime >= startTime && permit.applicationTime <= endTime;
+    const matchesUnitCategory = selectedUnitCategories.has(permit.properties.unit_category);
+    const matchesSourceDataset = selectedSourceDatasets.has(permit.properties.source_dataset);
+
+    if (matchesDate && matchesUnitCategory && matchesSourceDataset) {
       markerLayer.addLayer(permit.marker);
       visiblePermits.push(permit);
     }
@@ -258,7 +271,7 @@ function handleRangeInput(changedControl) {
 
   elements.startRange.style.zIndex = startDay >= totalDays - 2 ? "4" : "3";
   elements.endRange.style.zIndex = "3";
-  applyDateFilter();
+  applyFilters();
 }
 
 function handleDateInput(changedInput) {
@@ -333,7 +346,11 @@ function configureDateControls() {
   elements.resetDates.addEventListener("click", () => {
     elements.startRange.value = 0;
     elements.endRange.value = totalDays;
-    applyDateFilter();
+    applyFilters();
+  });
+
+  [...elements.unitCategoryFilters, ...elements.sourceDatasetFilters].forEach((input) => {
+    input.addEventListener("change", applyFilters);
   });
 }
 
@@ -377,7 +394,7 @@ fetch(DATA_PATH)
 
     configureDateControls();
     buildHistogram();
-    applyDateFilter();
+    applyFilters();
 
     // The first filter pass populates the feature group with every permit. Only fit after
     // the complete page layout and Leaflet's refreshed container measurement are painted.

@@ -373,6 +373,49 @@ input:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 
+.attribute-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.checkbox-filter {
+  min-width: 0;
+  margin: 0;
+  padding: 10px 11px 11px;
+  border: 1px solid var(--soft-line);
+  border-radius: 10px;
+  background: #f8f7f2;
+}
+
+.checkbox-filter legend {
+  padding: 0 4px;
+  color: var(--secondary);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 7px;
+  color: var(--secondary);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 550;
+}
+
+.checkbox-option input {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  margin: 0;
+  accent-color: var(--control-accent);
+  cursor: pointer;
+}
+
 .legend-row {
   display: flex;
   align-items: center;
