@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Explore Toronto housing permits by application date, unit category, and net units.">
+    <title>Toronto Permit Map</title>
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    >
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="map-pane" aria-label="Toronto permit map">
+        <div id="map"></div>
+        <div class="map-note" id="map-note" role="status">Loading permit data…</div>
+      </section>
+
+      <aside class="side-panel" aria-labelledby="page-title">
+        <div class="panel-scroll">
+          <header class="panel-header">
+            <p class="eyebrow">City building activity</p>
+            <h1 id="page-title">Toronto Permit Map</h1>
+            <p class="intro">Explore permits and the homes they create across the city.</p>
+          </header>
+
+          <section class="stats-grid" aria-label="Summary statistics" aria-live="polite">
+            <article class="stat-card">
+              <span class="stat-value" id="permit-count">—</span>
+              <span class="stat-label">Permits</span>
+            </article>
+            <article class="stat-card">
+              <span class="stat-value" id="net-unit-count">—</span>
+              <span class="stat-label">Net units</span>
+            </article>
+            <article class="stat-card stat-card-wide">
+              <span class="stat-value" id="large-permit-count">—</span>
+              <span class="stat-label">7+ unit permits</span>
+            </article>
+          </section>
+
+          <section class="panel-section" aria-labelledby="date-heading">
+            <div class="section-heading-row">
+              <div>
+                <p class="section-kicker">Filter</p>
+                <h2 id="date-heading">Application date</h2>
+              </div>
+              <button class="reset-button" id="reset-dates" type="button">Reset</button>
+            </div>
+
+            <div class="selected-range" aria-live="polite">
+              <span id="selected-start">—</span>
+              <span class="range-arrow" aria-hidden="true">→</span>
+              <span id="selected-end">—</span>
+            </div>
+
+            <div class="date-fields">
+              <label>
+                <span>Start</span>
+                <input id="start-date" type="date">
+              </label>
+              <label>
+                <span>End</span>
+                <input id="end-date" type="date">
+              </label>
+            </div>
+
+            <div class="histogram" id="date-histogram" aria-hidden="true"></div>
+
+            <div class="range-control" aria-label="Application date range sliders">
+              <div class="range-track"></div>
+              <div class="range-selection" id="range-selection"></div>
+              <input id="start-range" class="range-input" type="range" aria-label="Start date">
+              <input id="end-range" class="range-input" type="range" aria-label="End date">
+            </div>
+            <div class="range-limits" aria-hidden="true">
+              <span id="minimum-date">—</span>
+              <span id="maximum-date">—</span>
+            </div>
+          </section>
+
+          <section class="panel-section legend" aria-labelledby="legend-heading">
+            <p class="section-kicker">Map key</p>
+            <h2 id="legend-heading">Unit category</h2>
+            <div class="legend-row">
+              <span class="legend-dot one-unit-dot"></span>
+              <span>1 unit</span>
+            </div>
+            <div class="legend-row">
+              <span class="legend-dot medium-project-dot"></span>
+              <span>2-6 units</span>
+            </div>
+            <div class="legend-row">
+              <span class="legend-dot large-project-dot"></span>
+              <span>7+ units</span>
+            </div>
+            <div class="size-key" aria-label="Point size represents net units created">
+              <span class="size-circle size-small"></span>
+              <span class="size-circle size-medium"></span>
+              <span class="size-circle size-large"></span>
+              <span>More net units</span>
+            </div>
+            <p class="legend-note">Colour shows unit category. Circle area increases on a capped logarithmic scale with net units.</p>
+          </section>
+
+          <footer class="panel-footer">
+            Showing applications from <span id="data-date-range">the full dataset</span>.
+          </footer>
+        </div>
+      </aside>
+    </main>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="map.js"></script>
+  </body>
+</html>
