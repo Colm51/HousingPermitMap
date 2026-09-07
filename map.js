@@ -52,10 +52,12 @@ L.control.zoom({ position: "topleft" }).addTo(map);
 // }).addTo(map);
 
 
-L.tileLayer("https://tiles.openfreemap.org/styles/positron/{z}/{x}/{y}.png", {
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
-  attribution: '&copy; OpenStreetMap contributors &copy; OpenFreeMap'
+  opacity: 0.9,
+  attribution: "&copy; OpenStreetMap contributors"
 }).addTo(map);
+
 
 // A feature group exposes getBounds(), allowing the initial view to come directly from
 // the permit markers rather than from a hard-coded city centre.
