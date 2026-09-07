@@ -45,6 +45,7 @@ const map = L.map("map", {
 
 L.control.zoom({ position: "topleft" }).addTo(map);
 
+// old carto now requires an API
 // L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
 //   subdomains: "abcd",
 //   maxZoom: 20,
@@ -52,12 +53,51 @@ L.control.zoom({ position: "topleft" }).addTo(map);
 // }).addTo(map);
 
 
-L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 19,
-  opacity: 0.9,
-  attribution: "&copy; OpenStreetMap contributors"
-}).addTo(map);
+// L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+//   maxZoom: 19,
+//   opacity: 0.9,
+//   attribution: "&copy; OpenStreetMap contributors"
+// }).addTo(map);
 
+
+const osm = L.tileLayer(
+  "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+  {
+    maxZoom: 19,
+    opacity: 0.75,
+    attribution: "&copy; OpenStreetMap contributors"
+  }
+);
+
+const gray = L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+  {
+    maxZoom: 16,
+    attribution: "Tiles &copy; Esri"
+  }
+);
+
+const satellite = L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  {
+    maxZoom: 19,
+    attribution: "Tiles &copy; Esri and imagery contributors"
+  }
+);
+
+gray.addTo(map);
+
+L.control.layers(
+  {
+    "OpenStreetMap": osm,
+    "Esri World Gray": gray,
+    "Satellite": satellite
+  },
+  null,
+  {
+    collapsed: false
+  }
+).addTo(map);
 
 // A feature group exposes getBounds(), allowing the initial view to come directly from
 // the permit markers rather than from a hard-coded city centre.
