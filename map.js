@@ -45,10 +45,16 @@ const map = L.map("map", {
 
 L.control.zoom({ position: "topleft" }).addTo(map);
 
-L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-  subdomains: "abcd",
-  maxZoom: 20,
-  attribution: "&copy; OpenStreetMap contributors &copy; CARTO"
+// L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+//   subdomains: "abcd",
+//   maxZoom: 20,
+//   attribution: "&copy; OpenStreetMap contributors &copy; CARTO"
+// }).addTo(map);
+
+
+L.tileLayer("https://tiles.openfreemap.org/styles/positron/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  attribution: '&copy; OpenStreetMap contributors &copy; OpenFreeMap'
 }).addTo(map);
 
 // A feature group exposes getBounds(), allowing the initial view to come directly from
