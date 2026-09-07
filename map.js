@@ -60,6 +60,47 @@ L.control.zoom({ position: "topleft" }).addTo(map);
 // }).addTo(map);
 
 
+// note the esri gray layer will be decomissioned in 2028 in favour of one requiring an API
+
+// const osm = L.tileLayer(
+//   "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+//   {
+//     maxZoom: 19,
+//     opacity: 0.75,
+//     attribution: "&copy; OpenStreetMap contributors"
+//   }
+// );
+
+// const gray = L.tileLayer(
+//   "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+//   {
+//     maxZoom: 16,
+//     attribution: "Tiles &copy; Esri"
+//   }
+// );
+
+// const satellite = L.tileLayer(
+//   "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+//   {
+//     maxZoom: 19,
+//     attribution: "Tiles &copy; Esri and imagery contributors"
+//   }
+// );
+
+// gray.addTo(map);
+
+// L.control.layers(
+//   {
+//     "OpenStreetMap": osm,
+//     "Esri World Gray": gray,
+//     "Satellite": satellite
+//   },
+//   null,
+//   {
+//     collapsed: false
+//   }
+// ).addTo(map);
+
 const osm = L.tileLayer(
   "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
   {
@@ -87,17 +128,45 @@ const satellite = L.tileLayer(
 
 gray.addTo(map);
 
+const wardsLayer = L.geoJSON(null, {
+  style: {
+    color: "#555",
+    weight: 1.5,
+    fillOpacity: 0
+  }
+});
+
+const municipalLayer = L.geoJSON(null, {
+  style: {
+    color: "#111",
+    weight: 2,
+    fillOpacity: 0
+  }
+});
+
+fetch("OtherAssets/TorontoWards.geojson")
+  .then(response => response.json())
+  .then(data => wardsLayer.addData(data));
+
+fetch("OtherAssets/MunicipalBoundaries.geojson")
+  .then(response => response.json())
+  .then(data => municipalLayer.addData(data));
+
 L.control.layers(
   {
     "OpenStreetMap": osm,
     "Esri World Gray": gray,
     "Satellite": satellite
   },
-  null,
+  {
+    "Toronto Wards": wardsLayer,
+    "Municipal Boundaries": municipalLayer
+  },
   {
     collapsed: false
   }
 ).addTo(map);
+
 
 // A feature group exposes getBounds(), allowing the initial view to come directly from
 // the permit markers rather than from a hard-coded city centre.
