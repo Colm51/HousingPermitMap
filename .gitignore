@@ -1,3 +1,5 @@
 DataValidation/
 .DS_Store
 .DS_Store
+*.gpkg
+*.qmd
